@@ -1,0 +1,9 @@
+﻿  HEX.cpp
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(302,56): warning C4244: =: преобразование "LONGLONG" в "int", возможна потеря данных
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(345,48): warning C4244: =: преобразование "LONGLONG" в "int", возможна потеря данных
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(411,18): warning C4244: аргумент: преобразование "LONGLONG" в "size_t", возможна потеря данных
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(285,16): warning C4101: x: неиспользованная локальная переменная
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(289,19): warning C4101: FileSize: неиспользованная локальная переменная
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(410,24): warning C4101: FinStr: неиспользованная локальная переменная
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(60): warning C4715: LoadData: значение возвращается не при всех путях выполнения
+  HEX.vcxproj -> C:\Users\vladk\source\repos\HEX\Debug\HEX.exe

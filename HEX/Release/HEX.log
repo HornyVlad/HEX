@@ -1,0 +1,7 @@
+﻿  HEX.cpp
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(23,64): error C2664: "BOOL ReadFile(HANDLE,LPVOID,DWORD,LPDWORD,LPOVERLAPPED)": невозможно преобразовать аргумент 2 из "WCHAR" в "LPVOID"
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(23,26): message : Для преобразования из целого типа в указатель требуется reinterpret_cast, приведение в стиле С или приведение в стиле функции
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\um\fileapi.h(1013,1): message : см. объявление "ReadFile"
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(165,69): error C2664: "BOOL TextOutW(HDC,int,int,LPCWSTR,int)": невозможно преобразовать аргумент 4 из "WCHAR" в "LPCWSTR"
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(165,62): message : Для преобразования из целого типа в указатель требуется reinterpret_cast, приведение в стиле С или приведение в стиле функции
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\um\wingdi.h(5101,25): message : см. объявление "TextOutW"
