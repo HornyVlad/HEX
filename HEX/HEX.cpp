@@ -25,10 +25,10 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 OPENFILENAMEA File;
 char FileName[MAX_PATH];
-LPCSTR Buf = 0;
-LONGLONG BufSize = 0;
+//LPCSTR Buf = 0;
+//LONGLONG BufSize = 0;
 
-bool LoadData(LPCSTR FileName) {
+bool LoadData(LPCSTR FileName, LPCSTR* Buf, LONGLONG* BufSize) {
     HANDLE FileToLoad = CreateFileA(FileName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
     if (FileToLoad == INVALID_HANDLE_VALUE) {
         CloseHandle(FileToLoad);
@@ -43,16 +43,12 @@ bool LoadData(LPCSTR FileName) {
     }
     PBYTE pbFile = (PBYTE)MapViewOfFile(hfilemap, FILE_MAP_COPY, 0, 0, 0); //проверка на NULL ина извлечение файла
 
-    Buf = (LPCSTR)pbFile;
+    *Buf = (LPCSTR)pbFile;
 
     LARGE_INTEGER FileSize;
-    GetFileSizeEx(FileToLoad, &FileSize);//проверка
-    BufSize = FileSize.QuadPart;
+    GetFileSizeEx(FileToLoad, &FileSize);
+    *BufSize = FileSize.QuadPart;
 
-    //getsystemmetrics размер блоков для мапы 
-    //GetSystemInfo
-    //гранулярность почитать
-    //CloseHandle(FileToLoad);
     //Недостаточно прав, GetLastError, GetFormatMassage, файл больше чем буфер, Файл пустой, вывод 
 
     CloseHandle(hfilemap);
@@ -60,10 +56,6 @@ bool LoadData(LPCSTR FileName) {
 }
 
 void SetOpenFileParams(HWND hWnd) {
-
-    if (Buf != NULL) {
-        UnmapViewOfFile(Buf);
-    }
 
     ZeroMemory(&File, sizeof(File));
     File.lStructSize = sizeof(File);
@@ -123,7 +115,7 @@ int out(
 /// <param name="len">Длина хекс буфера</param>
 /// <param name="NewBuf">Буфер с хексом</param>
 /// <param name="FinStr">Итоговая строка</param>
-void PrintText(char* Offset, int Stroka, LPCSTR Text, long long SymCount, long long HexCount, size_t len, char* NewBuf, char** FinStr) {
+void PrintText(char* Offset, int Stroka, LPCSTR Text, long long SymCount, long long HexCount, size_t len, char* NewBuf, char** FinStr, LONGLONG BufSize) {
     int Symbol = 0;
     char* Str = (char*)malloc(SUM);
     char* vivod = Str;
@@ -278,10 +270,11 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    //static LPCSTR Buf;
-    //static LONGLONG BufSize;
+    static LPCSTR Buf;
+    static LONGLONG BufSize;
     static int NumLines = 0;
     static int cxChar, cyChar, cxCaps, cyClient, iVscrollPos, iMaxWidth, iVscrollMax;
+
     int i = 0, x, y, iPaintBeg, iPaintEnd, iVscrollInc;
     long long SymCount = 0, HexCount = 0;
     RECT Window;
@@ -297,7 +290,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
         case ID_OPEN:
             if (GetOpenFileNameA(&File)) {
-                LoadData(FileName);
+                LoadData(FileName, &Buf, &BufSize);
                 
                 NumLines = BufSize + NUMBER_OF_SYMBOLS - 1;
                 NumLines /= NUMBER_OF_SYMBOLS;
@@ -419,7 +412,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 Number = (g + 1) * NUMBER_OF_SYMBOLS;
                 sprintf(Offset, "%08X", Number);
 
-                //PrintText(Offset, Stroka, Text, SymCount, HexCount, len, NewBuf, &FinStr);
+                //PrintText(Offset, Stroka, Text, SymCount, HexCount, len, NewBuf, &FinStr, BufSize);
 
                 int Symbol = 0;
                 char* FinStr = (char*)malloc(SUM);
