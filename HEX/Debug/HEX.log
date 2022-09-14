@@ -1,7 +1,6 @@
 ﻿  HEX.cpp
-C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(365,56): warning C4244: =: преобразование "LONGLONG" в "INT", возможна потеря данных
-C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(408,1): warning C4002: слишком много аргументов для вызова макроса, подобного функции, "CreateWindowW"
-C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(455,51): warning C4244: =: преобразование "LONGLONG" в "INT", возможна потеря данных
-C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(537,27): warning C4244: =: преобразование "LONGLONG" в "size_t", возможна потеря данных
-C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(341,21): warning C4101: FileSize: неиспользованная локальная переменная
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(413,56): warning C4244: =: преобразование "LONGLONG" в "INT", возможна потеря данных
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(658,51): warning C4244: =: преобразование "LONGLONG" в "INT", возможна потеря данных
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(743,27): warning C4244: =: преобразование "LONGLONG" в "size_t", возможна потеря данных
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(357,21): warning C4101: FileSize: неиспользованная локальная переменная
   HEX.vcxproj -> C:\Users\vladk\source\repos\HEX\Debug\HEX.exe

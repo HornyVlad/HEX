@@ -14,3 +14,6 @@
 #include <memory.h>
 #include <tchar.h>
 #include <Commdlg.h>
+#include <stdio.h>
+#include <io.h>
+#include <direct.h>

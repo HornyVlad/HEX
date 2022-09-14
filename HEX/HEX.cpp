@@ -3,14 +3,18 @@
 #include "framework.h"
 #include "HEX.h"
 #include "Addons.h"
-#include "string"
-#include <stdio.h>
+#include "commctrl.h"
+#include "fileapi.h"
+#include "winbase.h"
+//#include "resource.h"
 
 #define MAX_LOADSTRING              100     //
 #define NUMBER_OF_SYMBOLS           16      //количество символов выводимых в строку
 #define NUMBER_OF_SYMBOLS_HEX       3       //количество символов для преобразования в хекс
 #define NUMBER_OF_SYMBOLS_OFFSET    8       //количество символов под смещение
-#define MAXENV                      4096    //длина пути
+//#define MAXENV                      4096    //длина пути
+#define MAXPATH 256 
+#define MAXREAD 8192 
 
 //длина строки
 #define SUM     NUMBER_OF_SYMBOLS_OFFSET + 1 + \
@@ -30,6 +34,7 @@ LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK    ChildWndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
+WNDPROC fnOldList;
 
 /// <summary>
 /// Считывание файла
@@ -39,7 +44,7 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 /// <param name="BufSize">Размер буфера</param>
 /// <returns>TRUE в случае успеха и ...</returns>
 BOOL LoadData(  _In_    LPCSTR FileName, 
-                _Out_ LPCSTR* Buf, 
+                _Out_ LPCSTR* Buf,
                 _Out_ LONGLONG* BufSize) 
 {
     //Открытие файла
@@ -224,7 +229,7 @@ int APIENTRY wWinMain(
 
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_HEX, szWindowClass, MAX_LOADSTRING);
-    
+    //InitCommonControls();
     WNDCLASSEXW wcex; //класс окна
 
     wcex.cbSize         = sizeof(WNDCLASSEX);
@@ -271,7 +276,7 @@ BOOL InitInstance(HINSTANCE hInstance, INT nCmdShow)
 {
    hInst = hInstance;
 
-   HWND hWnd = CreateWindowExW(0, szWindowClass, szTitle, WS_OVERLAPPEDWINDOW | WS_VSCROLL,
+   HWND hWnd = CreateWindowExW(0, szWindowClass, szTitle, WS_OVERLAPPEDWINDOW | WS_VSCROLL | WS_CLIPCHILDREN,
        CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
@@ -323,9 +328,20 @@ LRESULT CALLBACK WndProc(
                         cyClient,           //?
                         iVscrollPos,        //Позиция скрола
                         iVscrollMax;        //Максимум скролла
+
     static HWND         hWndList,           //Описатель TreeView
-                        hWndText;           //Описатель строки пути
-    static CHAR         szBuffer[MAXENV+1]; //Путь папки
+                        hWndText,           //Описатель строки пути
+                        hWndTree;
+    static CHAR         szBuffer[MAXPATH+1]; //Путь папки
+
+    /*static BOOL bValidFile;
+    static OFSTRUCT ofs;
+    static char sReadBuffer[MAXREAD], szFile[MAXPATH];*/
+
+    /*TV_INSERTSTRUCT TV_InsertStruct = { 0 };
+    HIMAGELIST himl;
+    HBITMAP hBmp;
+    int idxBooks;*/
 
     INT             i           = 0,    //Инкремент
                     y,                  //Координата отрисовки строк
@@ -340,19 +356,51 @@ LRESULT CALLBACK WndProc(
     HDC             hdc;                //
     LARGE_INTEGER   FileSize;           //
 
+    SCROLLINFO skif;
+
     switch (message)
     {
     case WM_COMMAND:
     {
-        //Вывод пути в строке пути
-        if (LOWORD(wParam) == 1 && HIWORD(wParam) == LBN_SELCHANGE)
+        //Вывод пути в строке пути (одно нажатие)
+        /*if (LOWORD(wParam) == 1 && HIWORD(wParam) == LBN_SELCHANGE)
         {
             i = SendMessage(hWndList, LB_GETCURSEL, 0, 0);
-            i = SendMessage(hWndList, LB_GETTEXT, i,(LPARAM)szBuffer);
-            strcpy(szBuffer + i + 1, getenv(szBuffer));
+            i = SendMessageA(hWndList, LB_GETTEXT, i,(LPARAM)szBuffer);
+            char* r = getenv(szBuffer);
+            strcpy(szBuffer + i + 1, r);
             *(szBuffer + i) = '=';
             SetWindowTextA(hWndText, (LPCSTR)szBuffer);
-        }
+        }*/
+
+        //Двойное нажатие
+        //if (LOWORD(wParam) == 1 && HIWORD(wParam) == LBN_DBLCLK)
+        //{
+        //    if (LB_ERR == (i = SendMessage(hWndList, LB_GETCURSEL, 0, 0L)))
+        //        break;
+        //    SendMessageA(hWndList, LB_GETTEXT, i, (LPARAM)szBuffer);
+        //    if (-1 != OpenFile(szBuffer, &ofs, OF_EXIST | OF_READ))
+        //    {
+        //        bValidFile = TRUE;
+        //        strcpy(szFile, szBuffer);
+        //        getcwd(szBuffer, MAXPATH);
+        //        if (szBuffer[strlen(szBuffer) - 1] != '\\')
+        //            strcat(szBuffer, "\\");
+        //        SetWindowTextA(hWndText, strcat(szBuffer, szFile));
+        //    }
+        //    else
+        //    {
+        //        bValidFile = FALSE;
+        //        szBuffer[strlen(szBuffer)] = '\0';
+        //        //char l = _chdir("C:\\Windows");
+        //        chdir(szBuffer + 1);
+        //        getcwd(szBuffer, MAXPATH);
+        //        SetWindowTextA(hWndText, szBuffer);
+        //        SendMessage(hWndList, LB_RESETCONTENT, 0, 0L);
+        //        SendMessage(hWndList, LB_DIR, 0x37 | DDL_DIRECTORY, (LONG)"*.*");
+        //    }
+        //    InvalidateRect(hWnd, NULL, TRUE);
+        //}
 
         INT wmId = LOWORD(wParam);
         switch (wmId)
@@ -389,6 +437,7 @@ LRESULT CALLBACK WndProc(
     case WM_CREATE:
     {
         hdc = GetDC(hWnd);
+        GetClientRect(hWnd, &Window);
 
         TEXTMETRIC  tm;
         GetTextMetrics(hdc, &tm);
@@ -396,9 +445,157 @@ LRESULT CALLBACK WndProc(
         cyChar  = tm.tmHeight + tm.tmExternalLeading;               //Высота символа
         //cxCaps  = (tm.tmPitchAndFamily & 1 ? 3 : 2) * cxChar / 2; 
 
-        //ReleaseDC(hWnd, hdc);
-        
-        hWndList = CreateWindow(L"listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
+        ReleaseDC(hWnd, hdc);
+
+        hWndTree = CreateWindowEx(0, WC_TREEVIEW, L"",
+            WS_VISIBLE | WS_CHILD | WS_BORDER |
+            TVS_HASLINES | TVS_HASBUTTONS | TVS_LINESATROOT,
+            0, 0, Window.right - Window.left, Window.bottom - Window.top,
+            hWnd, (HMENU)1, hInst, NULL);
+
+        SetCurrentDirectory(L"C:\\");
+        /*WCHAR l[] = L"D:\\";
+        HANDLE Attempt = FindFirstVolumeW((LPWSTR)l, sizeof(l)/sizeof(WCHAR));
+        if (Attempt == INVALID_HANDLE_VALUE) break;*/
+        WIN32_FIND_DATA fwd = {0};
+        HANDLE attempt = FindFirstFileW(L"*", &fwd);
+        if (attempt == INVALID_HANDLE_VALUE)
+            break;
+        WCHAR* a = fwd.cFileName;
+        HIMAGELIST himl;
+        HBITMAP hbmp;
+        int open, closed, document;
+
+        himl = ImageList_Create(16, 16, FALSE, 3, 0);
+        hbmp = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BITMAP1));
+        open = ImageList_Add(himl, hbmp, NULL);
+        DeleteObject(hbmp);
+
+        hbmp = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BITMAP1));
+        closed = ImageList_Add(himl, hbmp, NULL);
+        DeleteObject(hbmp);
+
+        hbmp = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BITMAP1));
+        document = ImageList_Add(himl, hbmp, NULL);
+        DeleteObject(hbmp);
+
+        TreeView_SetImageList(hWndTree, himl, TVSIL_NORMAL);
+        int nLevel = 1;
+        do
+        {
+            TVINSERTSTRUCT TVS = { 0 };
+            TVITEM TVI;
+            static HTREEITEM hPrev = (HTREEITEM)TVI_FIRST;
+            static HTREEITEM hPrevRootItem = NULL;
+            static HTREEITEM hPrevLev2Item = NULL;
+            HTREEITEM hti;
+
+            TVI.mask = TVIF_TEXT | TVIF_IMAGE
+                | TVIF_SELECTEDIMAGE | TVIF_PARAM;
+
+            TVI.pszText = fwd.cFileName;
+            //(LPWSTR)L"aboba";
+            TVI.cchTextMax = sizeof(TVI.pszText) / sizeof(TVI.pszText[0]);
+
+            TVI.iImage = document;
+            TVI.iSelectedImage = document;
+
+            TVI.lParam = (LPARAM)nLevel;
+            TVS.item = TVI;
+            TVS.hInsertAfter = hPrev;
+
+            if (nLevel == 1)
+                TVS.hParent = TVI_ROOT;
+            else if (nLevel == 2)
+                TVS.hParent = hPrevRootItem;
+            else
+                TVS.hParent = hPrevLev2Item;
+
+            hPrev = (HTREEITEM)SendMessage(hWndTree, TVM_INSERTITEM,
+                0, (LPARAM)(LPTVINSERTSTRUCT)&TVS);
+
+            if (hPrev == NULL)
+                return NULL;
+
+            if (nLevel == 1)
+                hPrevRootItem = hPrev;
+            else if (nLevel == 2)
+                hPrevLev2Item = hPrev;
+
+            if (nLevel > 1)
+            {
+                hti = TreeView_GetParent(hWndTree, hPrev);
+                TVI.mask = TVIF_IMAGE | TVIF_SELECTEDIMAGE;
+                TVI.hItem = hti;
+                TVI.iImage = closed;
+                TVI.iSelectedImage = closed;
+                TreeView_SetItem(hWndTree, &TVI);
+            }
+        }         while (FindNextFile(attempt, &fwd));
+
+        //for (int nLevel = 1; nLevel < 3; nLevel++)
+        //{
+        //    TVINSERTSTRUCT TVS = { 0 };
+        //    TVITEM TVI;
+        //    static HTREEITEM hPrev = (HTREEITEM)TVI_FIRST;
+        //    static HTREEITEM hPrevRootItem = NULL;
+        //    static HTREEITEM hPrevLev2Item = NULL;
+        //    HTREEITEM hti;
+
+        //    TVI.mask = TVIF_TEXT | TVIF_IMAGE
+        //        | TVIF_SELECTEDIMAGE | TVIF_PARAM;
+
+        //    TVI.pszText = fwd.cFileName;
+        //        //(LPWSTR)L"aboba";
+        //    TVI.cchTextMax = sizeof(TVI.pszText) / sizeof(TVI.pszText[0]);
+
+        //    TVI.iImage = document;
+        //    TVI.iSelectedImage = document;
+
+        //    TVI.lParam = (LPARAM)nLevel;
+        //    TVS.item = TVI;
+        //    TVS.hInsertAfter = hPrev;
+
+        //    if (nLevel == 1)
+        //        TVS.hParent = TVI_ROOT;
+        //    else if (nLevel == 2)
+        //        TVS.hParent = hPrevRootItem;
+        //    else
+        //        TVS.hParent = hPrevLev2Item;
+
+        //    hPrev = (HTREEITEM)SendMessage(hWndTree, TVM_INSERTITEM,
+        //        0, (LPARAM)(LPTVINSERTSTRUCT)&TVS);
+
+        //    if (hPrev == NULL)
+        //        return NULL;
+
+        //    if (nLevel == 1)
+        //        hPrevRootItem = hPrev;
+        //    else if (nLevel == 2)
+        //        hPrevLev2Item = hPrev;
+
+        //    if (nLevel > 1)
+        //    {
+        //        hti = TreeView_GetParent(hWndTree, hPrev);
+        //        TVI.mask = TVIF_IMAGE | TVIF_SELECTEDIMAGE;
+        //        TVI.hItem = hti;
+        //        TVI.iImage = closed;
+        //        TVI.iSelectedImage = closed;
+        //        TreeView_SetItem(hWndTree, &TVI);
+        //    }
+        //}
+
+        //TreeView_InsertItem(hWndTree, TV_InsertStruct);
+        //TV_InsertStruct.hParent = NULL;
+        //TV_InsertStruct.hInsertAfter = TVI_ROOT;
+        //TV_InsertStruct.item.mask = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
+        //TV_InsertStruct.item.pszText = (LPWSTR)L"Родительский";
+        //TV_InsertStruct.item.iImage = 0; // не нажата pic
+        //TV_InsertStruct.item.iSelectedImage = 1; // нажатое изображение
+        //Parent = (HTREEITEM)SendMessage(hWndTree,
+        //    TVM_INSERTITEM, 0, (LPARAM)&TV_InsertStruct);
+
+        /*hWndList = CreateWindow(L"listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
             tm.tmAveCharWidth, tm.tmHeight * 3,
             tm.tmAveCharWidth * 16 +
             GetSystemMetrics(SM_CXVSCROLL),
@@ -407,33 +604,38 @@ LRESULT CALLBACK WndProc(
             (HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE),
             NULL, );
 
+        char* n = getcwd(szBuffer, MAXPATH);
+
         hWndText = CreateWindow(L"static", NULL,
             WS_CHILD | WS_VISIBLE | SS_LEFT,
             tm.tmAveCharWidth, tm.tmHeight,
-            tm.tmAveCharWidth * MAXENV, tm.tmHeight,
+            tm.tmAveCharWidth * MAXPATH, tm.tmHeight,
             hWnd, (HMENU)2,
             (HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE),
             NULL);
 
-        LPCSTR hmjghm[] =
+
+        //for (int i = 0; environ[i]; i++)
+        //{
+        //    if (strlen(environ[i]) > MAXPATH)
+        //        continue;
+        //    //strcpy(szBuffer, environ[i]);
+        //    *strchr(strcpy(szBuffer, environ[i]), '=') = '\0';
+        //    SendMessageA(hWndList, LB_ADDSTRING, 0, (LPARAM)szBuffer);
+        //}
+        
+        //fnOldList = (WNDPROC)SetWindowLong(hWndList, GWL_WNDPROC,(LPARAM)ListProc);
+
+        //SendMessage(hWndList, LB_DIR, 0x37 | DDL_DRIVES, (LPARAM)"*.*");
+        SendMessage(hWndList, LB_DIR,DDL_READWRITE | DDL_READONLY | DDL_HIDDEN | DDL_SYSTEM | DDL_DIRECTORY | DDL_DRIVES | DDL_ARCHIVE, (LPARAM)"*.*");*/
+        
+        /*if (!InitTreeViewImageLists(hWndTree) ||
+            !InitTreeViewItems(hWndTree))
         {
-            "hkuhkuki",
-            "hukhukukggggggggggggg",
-        };
-
-        SendMessageA(hWndList, LB_ADDSTRING, 0, (LPARAM)szBuffer);
-
-        for (int i = 0; environ[i]; i++)
-        {
-            if (strlen(environ[i]) > MAXENV)
-                continue;
-            strcpy(szBuffer, environ[i]);
-            //*strchr(strcpy(szBuffer, environ[i]), '=') = '\0';
-            SendMessageA(hWndList, LB_ADDSTRING, 0, (LPARAM)szBuffer);
-        }
-        //SendMessage(hWndList, LB_DIR, DDL_READWRITE, (LPARAM)"*.*");
-
-        ReleaseDC(hWnd, hdc);
+            DestroyWindow(hWndTree);
+            return FALSE;
+        }*/
+        FindClose(attempt);
         SetOpenFileParams(hWnd);
         break;
     }
@@ -449,8 +651,9 @@ LRESULT CALLBACK WndProc(
 
         PosX    = Window.right / 4 * 3; //Координаты для TreeView
         PosY    = 50;                   //
-        MoveWindow(hWndList, PosX, PosY, Window.right / 4, Window.bottom, TRUE);
-        MoveWindow(hWndText, PosX, 16, Window.right / 4, 16, TRUE);
+        //MoveWindow(hWndList, PosX, PosY, Window.right / 4, Window.bottom, TRUE);
+        //MoveWindow(hWndText, PosX, 16, Window.right / 4, 16, TRUE);
+        MoveWindow(hWndTree, PosX, PosY, Window.right / 4, Window.bottom, TRUE);
 
         NumLines    = BufSize + NUMBER_OF_SYMBOLS - 1; //
         NumLines    /= NUMBER_OF_SYMBOLS;              //Подсчёт количества строк
@@ -485,7 +688,10 @@ LRESULT CALLBACK WndProc(
             iVscrollInc = max(1, cyClient / cyChar);
             break;
         case SB_THUMBTRACK:
-            iVscrollInc = HIWORD(wParam) - iVscrollPos;
+            skif.cbSize = sizeof(SCROLLINFO);
+            skif.fMask = SIF_TRACKPOS;
+            GetScrollInfo(hWnd, SB_VERT, &skif);
+            iVscrollInc = skif.nTrackPos - iVscrollPos;
             break;
         default:
             iVscrollInc = 0;

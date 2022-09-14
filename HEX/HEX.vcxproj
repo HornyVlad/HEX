@@ -92,6 +92,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -152,6 +153,10 @@
     <ResourceCompile Include="HEX.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\Downloads\679049671309525012.bmp" />
+    <Image Include="..\..\..\..\Downloads\slow.png" />
+    <Image Include="..\bitmap2.bmp" />
+    <Image Include="..\slow.bmp" />
     <Image Include="HEX.ico" />
     <Image Include="small.ico" />
   </ItemGroup>

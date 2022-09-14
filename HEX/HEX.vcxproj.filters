@@ -48,5 +48,17 @@
     <Image Include="HEX.ico">
       <Filter>Файлы ресурсов</Filter>
     </Image>
+    <Image Include="..\slow.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Downloads\slow.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="..\bitmap2.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Downloads\679049671309525012.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
   </ItemGroup>
 </Project>
