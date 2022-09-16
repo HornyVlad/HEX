@@ -1,6 +1,13 @@
 ﻿  HEX.cpp
-C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(413,56): warning C4244: =: преобразование "LONGLONG" в "INT", возможна потеря данных
-C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(658,51): warning C4244: =: преобразование "LONGLONG" в "INT", возможна потеря данных
-C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(743,27): warning C4244: =: преобразование "LONGLONG" в "size_t", возможна потеря данных
-C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(357,21): warning C4101: FileSize: неиспользованная локальная переменная
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(241,17): warning C4244: инициализация: преобразование "DWORD" в "SHORT", возможна потеря данных
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(324,21): warning C4101: hdc: неиспользованная локальная переменная
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(319,21): warning C4101: iPaintEnd: неиспользованная локальная переменная
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(317,21): warning C4101: y: неиспользованная локальная переменная
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(325,21): warning C4101: FileSize: неиспользованная локальная переменная
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(320,21): warning C4101: iVscrollInc: неиспользованная локальная переменная
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(318,21): warning C4101: iPaintBeg: неиспользованная локальная переменная
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(360,20): warning C4101: tvItem: неиспользованная локальная переменная
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(551,48): warning C4244: =: преобразование "LONGLONG" в "INT", возможна потеря данных
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(564,48): warning C4244: =: преобразование "LONGLONG" в "INT", возможна потеря данных
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(656,27): warning C4244: =: преобразование "LONGLONG" в "size_t", возможна потеря данных
   HEX.vcxproj -> C:\Users\vladk\source\repos\HEX\Debug\HEX.exe
