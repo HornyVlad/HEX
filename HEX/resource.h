@@ -19,6 +19,16 @@
 #define ID_OPEN                         32773
 #define IDC_STATIC                      -1
 
+#define MAX_LOADSTRING              100     //
+#define NUMBER_OF_SYMBOLS           16      //количество символов выводимых в строку
+#define NUMBER_OF_SYMBOLS_HEX       3       //количество символов для преобразования в хекс
+#define NUMBER_OF_SYMBOLS_OFFSET    8       //количество символов под смещение
+
+//длина строки
+#define SUM     NUMBER_OF_SYMBOLS_OFFSET + 1 + \
+                NUMBER_OF_SYMBOLS * NUMBER_OF_SYMBOLS_HEX + \
+                NUMBER_OF_SYMBOLS * 2    //длина строки
+
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED

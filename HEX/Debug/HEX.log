@@ -1,12 +1,12 @@
 ﻿  HEX.cpp
-C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(117,31): warning C4244: =: преобразование "UINT64" в "ULONG", возможна потеря данных
-C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(166,51): warning C4244: =: преобразование "UINT64" в "ULONG", возможна потеря данных
-C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(467,31): warning C4244: =: преобразование "UINT64" в "INT", возможна потеря данных
-C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(776,23): warning C4244: =: преобразование "UINT64" в "INT", возможна потеря данных
-C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(852,21): warning C4244: =: преобразование "UINT64" в "INT", возможна потеря данных
-C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(865,38): warning C4244: =: преобразование "UINT64" в "size_t", возможна потеря данных
-C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(449,21): warning C4101: FileSize: неиспользованная локальная переменная
-C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(612,27): warning C4101: hti: неиспользованная локальная переменная
+C:\Users\vladk\source\repos\HEX\HEX\Func.h(63,31): warning C4244: =: преобразование "UINT64" в "ULONG", возможна потеря данных
+C:\Users\vladk\source\repos\HEX\HEX\Func.h(112,51): warning C4244: =: преобразование "UINT64" в "ULONG", возможна потеря данных
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(132,24): warning C4101: tvItem: неиспользованная локальная переменная
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(207,27): warning C4101: hti: неиспользованная локальная переменная
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(339,23): warning C4244: =: преобразование "UINT64" в "INT", возможна потеря данных
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(351,23): warning C4244: =: преобразование "UINT64" в "INT", возможна потеря данных
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(437,23): warning C4244: инициализация: преобразование "UINT64" в "INT", возможна потеря данных
+C:\Users\vladk\source\repos\HEX\HEX\HEX.cpp(448,39): warning C4244: =: преобразование "UINT64" в "size_t", возможна потеря данных
 LINK : warning LNK4075: не учитывается "/INCREMENTAL" из-за спецификации "/PROFILE"
-HEX.obj : warning LNK4075: не учитывается "/EDITANDCONTINUE" из-за спецификации "/OPT:REF"
+ChildWin.obj : warning LNK4075: не учитывается "/EDITANDCONTINUE" из-за спецификации "/OPT:REF"
   HEX.vcxproj -> C:\Users\vladk\source\repos\HEX\Debug\HEX.exe
